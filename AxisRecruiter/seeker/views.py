@@ -2,40 +2,129 @@ from django.shortcuts import render
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .models import UserProfile
+from .models import UserProfile, InterviewQ
 from recruiter.models import Jobs 
 from django.contrib.sessions.models import Session
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
+from langchain import PromptTemplate
+from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.chains.summarize import load_summarize_chain
+from langchain.prompts import PromptTemplate
+import requests
+from bs4 import BeautifulSoup
+from markdownify import markdownify as md
+import os
+os.environ["OPENAI_API_KEY"] = "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"
+
+
 from django.shortcuts import get_object_or_404, redirect
 from django import forms
 from django.core.files.storage import default_storage
 from django.db import transaction
 import PyPDF2
-
+from django.db.models import Count
+from django.http import JsonResponse
 from django.core.files.base import ContentFile
 job_ids=None
 loginu=True
 profile_object={}
-jid=0
+jid=None
 user_profile=None
+desuser=None
 applied_jobs=None
+cnt_que=0
+preque=''
+def chat_processing(request):
+    global jid
+    print(user_profile)
+    website_data = ""
+    urls = ['https://engineeringinterviewquestions.com/axis-bank-interview-questions-and-answers-pdf/']
+
+    for url in urls:
+        # text = jid.resumetxt
+        text=pull_from_website(url) 
+        website_data += text
+
+    user_information = website_data
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=20000, chunk_overlap=2000)
+    docs = text_splitter.create_documents([user_information])
+    map_prompt=''' You are a helpful AI bot that takes the banking interview of the user .give list to interview question by analysing given resume  information by using this data as % START OF INFORMATION ABOUT {job}:
+    {text}
+    % END OF INFORMATION ABOUT {job}:'''
+   
+    map_prompt_template = PromptTemplate(template=map_prompt, input_variables=["text", "job"])
+
+    combine_prompt = """
+    You are a helpful AI bot that is an interviewer which takes the banking interview of the user and takes the input from the user for the answer.
+    You will be given a list of potential interview questions that we can ask to the user related to the {job}.
+
+    Please consolidate the questions and return set of questions 
+
+    % INTERVIEW QUESTIONS
+    {text}
+    """
+    combine_prompt_template = PromptTemplate(template=combine_prompt, input_variables=["text", "job"])
+    llm = ChatOpenAI(temperature=.25, model_name='gpt-3.5-turbo')
+
+    chain = load_summarize_chain(llm,chain_type="map_reduce",map_prompt=map_prompt_template,combine_prompt=combine_prompt_template
+    #,verbose=True
+    )
+
+    output = chain({"input_documents": docs, # The seven docs that were created before
+                    "job": "cleark"
+                })
+    questions= (output['output_text'])
+
+    questions_list = questions.split('\n')
+
+    # Cleaning up the list to remove empty items and extracting the questions
+    questions_list = [question.split('. ', 1)[1] for question in questions_list if question.strip()]
+
+    print(questions_list,questions)
+    global preque
+    if request.method == 'POST':
+        cnt_que+=1
+        user_message = request.POST.get('user_message', '')
+        print(user_message)
+        # Process the user's message and generate a bot response
+        bot_response = questions_list[cnt_que]
+        
+        # # Create sample interview questions
+        question1 = InterviewQ.objects.create(
+            Question=preque,
+            Answer=user_message,
+        )
+        
+        
+        user_profile.applied_interview.add(question1) # Applicant 2 only answered the first question
+        user_profile.save()
+        preque=bot_response
+        print(question1,bot_response,cnt_que)
+        return JsonResponse({'bot_response': bot_response})
 
 def index(request):
-    
-    # jobs = Jobs.objects.annotate(application_count=Count('id'))
+    # Jobs.objects.all().delete()
+    # UserProfile.objects.all().delete()
 
-    # # Creating a list of dictionaries containing job data
-    # job_data = [{'job_title': job.jobname, 'job_count': job.applied} for job in jobs]
-    # rejobs = Jobs.objects.all()
-    # for i in rejobs:
-    #     if i.applied
+    jobs_datad = Jobs.objects.order_by('dobs')[:3]
+
+    # Fetching data for annotation and chart
+    jobs = Jobs.objects.annotate(application_count=Count('id'))
+
+    # Creating a list of dictionaries containing job data
+    job_data = [{'job_title': job.jobname, 'job_count': job.applied} for job in jobs]
+
     global loginu
     loginu =True
     if loginu:
-        return render(request,'index.html', {'login': loginu})
+        return render(request,'index.html', {'login': loginu,"job_data": jobs_datad})
     else:
         return render(request,'index2.html', {'login': loginu,'appliedjob':profile_object.applied})
+    
+
 
 def index2(request):
     global loginu
@@ -43,19 +132,10 @@ def index2(request):
     global user_profile
     global applied_jobs
     global jid
-    print(user_profile)
-    # resume_path = user_profile.resume # Get the path to the resume file
-    # pdf_url = user_profile.resume
-    # print(pdf_url)
-    response = HttpResponse(user_profile.resume, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="resume.pdf"'
-    
-    return render(request, 'index2.html', {'user_profile': user_profile, 'applied_jobs': applied_jobs, 'resume_path': response,'pdf_url': response})
-    # return render(request, 'index2.html', {'user_profile': user_profile, 'applied_jobs': applied_jobs})
-    # for arg in args:
-    #     user = get_object_or_404(UserProfile, username=request.username)
-    #     user.applied_jobs.add(arg)
-    # return render(request,'index2.html', {'login': loginu,})
+    jid=user_profile
+    global desuser
+    desuser=user_profile
+    return render(request, 'index2.html', {'user_profile': user_profile, 'applied_jobs': applied_jobs})
 
 
 def download_resume(request, user_profile_id):
@@ -63,6 +143,9 @@ def download_resume(request, user_profile_id):
     response = HttpResponse(user_profile.resume, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="resume.pdf"'
     return response
+
+def interviewapp(request): 
+    return render(request, 'interviewapp.html')
 
 def apply_for_job(request, job_id):
     global loginu
@@ -126,6 +209,7 @@ def signin(request):
             loginu = False
             user_profile = filtered_profiles[0]
             applied_jobs = user_profile.applied_jobs.all()  # Retrieve applied jobs
+            
             return render(request, 'index2.html', {'user_profile': user_profile, 'applied_jobs': applied_jobs})
    
         else:
@@ -196,7 +280,6 @@ def signup(request):
         for page_num in range(num_pages):
             page = pdf_reader.pages[page_num]
             text += page.extract_text()
-        print(text)
         UserProfile.objects.create(
             name = name,
             email = email,
@@ -234,3 +317,23 @@ def sample(request):
 def check_username_availability(request, username):
     username_exists = UserProfile.objects.filter(username=username).exists()
     return JsonResponse({'exists': username_exists})
+
+def pull_from_website(url):
+    
+    # Doing a try in case it doesn't work
+    try:
+        response = requests.get(url)
+            # Put your response in a beautiful soup
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Get your text
+        text = soup.get_text()
+    
+        # Convert your html to markdown. This reduces tokens and noise
+        text = md(text)
+         
+        return text
+    except:
+        # In case it doesn't work
+        print ("Whoops, error")
+        return None

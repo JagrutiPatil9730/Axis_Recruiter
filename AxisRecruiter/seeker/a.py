@@ -1,5 +1,9 @@
-# Import the UserProfile model
-from .models import UserProfile
+import glob
+import wget;
 
-# Delete rows with NULL pdf_file values
-UserProfile.objects.filter(pdf_file__isnull=True).delete()
+url='https://docs.intersystems.com/irisforhealth20231/csp/docbook/pdfs.zip';
+wget.download(url)
+# extract docs
+import zipfile
+with zipfile.ZipFile('pdfs.zip','r') as zip_ref:
+  zip_ref.extractall('.')

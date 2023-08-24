@@ -10,8 +10,206 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
     <link rel="stylesheet" href="{%static 'assets/css/bs-theme-overrides.css'%}">
     <link rel="stylesheet" href="{%static 'assets/css/Footer-Basic-icons.css'%}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+ 
+  <style>
+    .card-body {
+      display: none;
+    }
+    .card.expanded .card-body {
+      display: block;
+    }
+  </style>
 </head>
 
+<body>
+   
+        
+<div class="" style="margin-right: 15px;margin-left: 15px;">
+    <div class="card" >
+        <div class="row" style="margin-right: 15px;margin-left: 15px;">
+            <div class="col-xxl-1">
+                <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"></path>
+                    </svg></div>
+            </div>
+            <div class="col align-self-center">
+                <h5><strong>Name</strong></h5>
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div  style="width:auto;">
+                                <h6>CV Ranking</h6>
+                            </div>
+                            <div class="col">
+                                <div class="progress">
+                                    <div class="progress-bar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
+                                </div>
+                            </div>
+                            <div style="width:auto;">
+                                <h6>Interview Performance</h6>
+                            </div>
+                            <div class="col">
+                                <div class="progress">
+                                    <div class="progress-bar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 17px;">
+                    <div class="col" >
+                        <h6>skills </h6>
+                    </div>
+                    <div  style="width:auto;" >
+                    <button class="btn btn-primary expand-button">Expand</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+      <div class="card-body">
+        <div class="info-section" display="None">
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="mb-2">experiance:</h6>
+                        </div>
+                        <div class="col">
+                            <h6 class=" mb-2">Company:</h6>
+                        </div>
+                        <div class="col">
+                            <h6 class=" mb-2">Post</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class=" mb-2">gender</h6>
+                        </div>
+                        <div class="col">
+                            <h6 class=" mb-2">age</h6>
+                        </div>
+                        <div class="col">
+                            <h6 class=" mb-2">Post</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class=" mb-2">Address</h6>
+                        </div>
+                        <div class="col">
+                            <h6 class=" mb-2">Add2</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class=" mb-2">Phone no 1</h6>
+                        </div>
+                        <div class="col">
+                            <h6 class=" mb-2">Phone no 2</h6>
+                        </div>
+                        <div class="col">
+                            <h6 class=" mb-2">email</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class=" mb-2">Education</h6>
+                        </div>
+                        <div class="col">
+                            <h6 class=" mb-2">Marks</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class=" mb-2">interview Result</h6>
+                        </div>
+                        <div class="col">
+                            <h6 class=" mb-2">Rank</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="accordion" role="tablist" id="accordion-1">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-1 .item-1" aria-expanded="true" aria-controls="accordion-1 .item-1" style="border: 1px solid var(--bs-primary) ;border-top-style: solid;border-right-style: none;border-bottom-style: solid;border-left-style: none;"> <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-question-mark">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M8 8a3.5 3 0 0 1 3.5 -3h1a3.5 3 0 0 1 3.5 3a3 3 0 0 1 -2 3a3 4 0 0 0 -2 4"></path>
+                                        <line x1="12" y1="19" x2="12" y2="19.01"></line>
+                                    </svg>Question by Ai </button></h2>
+                            <div class="accordion-collapse collapse show item-1" role="tabpanel" data-bs-parent="#accordion-1">
+                                <div class="accordion-body">
+                                    <p class="mb-0" style="border: 1px solid var(--bs-yellow) ;border-top-style: solid;border-right-style: none;border-bottom-style: solid;border-left-style: none;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-thumb-up" style="font-size: 23px;margin-right: 8px;">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"></path>
+                                        </svg>Answer Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-1 .item-2" aria-expanded="false" aria-controls="accordion-1 .item-2">Accordion Item</button></h2>
+                            <div class="accordion-collapse collapse item-2" role="tabpanel" data-bs-parent="#accordion-1">
+                                <div class="accordion-body">
+                                    <p class="mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-1 .item-3" aria-expanded="false" aria-controls="accordion-1 .item-3">Accordion Item</button></h2>
+                            <div class="accordion-collapse collapse item-3" role="tabpanel" data-bs-parent="#accordion-1">
+                                <div class="accordion-body">
+                                    <p class="mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $(".expand-button").click(function () {
+        $(this).closest(".card").toggleClass("expanded");
+      });
+    });
+  </script>
+    <div data-reflow-type="order-status"></div>
+    <script src="{%static 'assets/bootstrap/js/bootstrap.min.js'%}"></script>
+    <script src="https://cdn.reflowhq.com/v2/toolkit.min.js"></script>
+    <script src="{%static 'assets/js/bs-init.js'%}"></script>
+    <script src="{%static 'assets/js/startup-modern.js'%}"></script>
+</body>
+{% comment %} 
 <body>
     <nav class="navbar navbar-expand-md fixed-top navbar-shrink py-3 navbar-light" id="mainNav">
         <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><span style="color: #97144d;font-weight: bold;">Axis Recruiter</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
@@ -20,6 +218,7 @@
                     <li class="nav-item"><a class="nav-link" href="{%url 'indexr'%}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{%url 'Jobposting'%}">Job Posting</a></li>
                     <li class="nav-item"><a class="nav-link " href="{%url 'ATS'%}">CV Ranking</a></li>
+                    <li class="nav-item"><a class="nav-link " href="{%url 'Interview'%}">Interview</a></li>
                     <li class="nav-item"><a class="nav-link" href="{%url 'Shortlisted'%}">Shortlisted</a></li>
                     <li class="nav-item"><a class="nav-link active" href="{%url 'Communication'%}">Communication</a></li>
                 </ul><a class="btn btn-primary shadow" role="button" href="{%url 'index'%}">Log Out</a>
@@ -96,6 +295,5 @@
     <script src="{%static 'assets/js/chart.min.js'%}"></script>
     <script src="{%static 'assets/js/bs-init.js'%}"></script>
     <script src="{%static 'assets/js/startup-modern.js'%}"></script>
-</body>
-
+</body> {% endcomment %}
 </html>

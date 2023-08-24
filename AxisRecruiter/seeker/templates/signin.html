@@ -19,11 +19,9 @@
         <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><span style="color: #97144d;font-weight: bold;">Axis Recruiter</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav mx-auto">
-                    {% if login %}
+                   
                     <li class="nav-item"><a class="nav-link" href="{%url 'index'%}">Home</a></li>
-                    {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{%url 'index2'%}">Home</a></li>
-                    {% endif %}
+                    
                     <li class="nav-item"><a class="nav-link" href="{%url 'jobs'%}">Job</a></li>
                     <li class="nav-item"><a class="nav-link" href="{%url 'StudenPrograms'%}">Student Programs</a></li>
                     <li class="nav-item"><a class="nav-link" href="{%url 'Guidlines'%}">Guidlines</a></li>

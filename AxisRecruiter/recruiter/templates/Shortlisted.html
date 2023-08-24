@@ -19,7 +19,8 @@
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link" href="{%url 'indexr'%}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{%url 'Jobposting'%}">Job Posting</a></li>
-                    <li class="nav-item"><a class="nav-link " href="{%url 'ATS'%}">CV Ranking</a></li>
+                    <li class="nav-item"><a class="nav-link  " href="{%url 'ATS'%}">CV Ranking</a></li>
+                    <li class="nav-item"><a class="nav-link " href="{%url 'Interview'%}">Interview</a></li>
                     <li class="nav-item"><a class="nav-link active" href="{%url 'Shortlisted'%}">Shortlisted</a></li>
                     <li class="nav-item"><a class="nav-link" href="{%url 'Communication'%}">Communication</a></li>
                 </ul><a class="btn btn-primary shadow" role="button" href="{%url 'index'%}">Log Out</a>
@@ -33,7 +34,7 @@
                 <div class="row" style="margin: 10px;">
                     <div class="col-xxl-1 text-start" style="width: 10%;">
                         <div class="dropdown">
-                            <button class="btn btn-primary" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button disabled class="btn btn-primary" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Filter
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-filter fs-3">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -45,10 +46,6 @@
                                     <div class="mb-3">
                                         <label class="form-label">Experience Greater Than</label>
                                         <input type="number" class="form-control" id="experienceInput" placeholder="Years">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Openings</label>
-                                        <input type="number" class="form-control" id="openingsInput" placeholder="Number of Openings">
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Criteria</label>
@@ -71,7 +68,7 @@
                     <!-- Inside the sort section -->
                     <div class="col-xxl-1 text-start "style="width:10%;">
                         <div class="dropdown">
-                            <button class="btn btn-primary" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button disabled class="btn btn-primary" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Sort
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrows-sort fs-3">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -79,12 +76,14 @@
                                     <path d="M21 15l-4 4l-4-4m4 4v-14"></path>
                                 </svg>
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="sortDropdown">
-                                <a class="dropdown-item" href="#">name</a>
-                                <a class="dropdown-item" href="#">marks</a>
-                                <a class="dropdown-item" href="#">skills</a>
-                                <a class="dropdown-item" href="#">experiance</a>
+                            <div class="dropdown-menu" id='dropsort' aria-labelledby="sortDropdown">
+                                <a class="dropdown-item" >name</a>
+                                <a class="dropdown-item" >marks</a>
+                                <a class="dropdown-item" >Ranking</a>
+                                <a class="dropdown-item" >skills</a>
+                                <a class="dropdown-item" >experiance</a>
                             </div>
+                            
                         </div>
                     </div>
 
@@ -92,14 +91,11 @@
                         <select class="form-select" id="jobSelect" aria-label="Select a job">
                             <option selected disabled>Select a job</option>
                             {% for job in jobs %}
-                                <option value="{{ job.id }}">{{ job.jobname }}</option>
+                                <option value="{{ job.id }}" {% if forloop.first %}selected{% endif %}>{{ job.jobname }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     
-                    <div class="col-xxl-1 text-end">
-                        <button class="btn btn-primary text-center shadow form-label" id="searchBtn">Search</button>
-                    </div>
                     
                 </div>
             </section>
@@ -113,7 +109,7 @@
             <div class="col">
                 
                 <div class="card" id="applicantList">
-                    {% for applicant in applicants %}
+                    {% for applicant in allapplicants %}
 
                     <div class="card-body">
                         <div class="row">
@@ -126,18 +122,20 @@
                                 <h5><strong>{{ applicant.name }}</strong></h5>
                                 <div class="row">
                                     <div class="col">
-                                        <h6>CV Ranking</h6>
+                                        <h6>CV Match</h6>
                                         <div class="progress">
-                                            <div class="progress-bar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
+                                            <div class="progress-bar" id="progressBar" style="width: {{ applicant.match }}%;" aria-valuenow={{ applicant.match }} aria-valuemin="0" aria-valuemax="100" style="width: 50%;">{{ applicant.match }}%</div>
                                         </div>
+                                        
+                                        
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 17px;">
                                     <div class="col">
-                                        <h6>Ranking :</h6>
+                                        <h6>Skills :{{ applicant.skillstxt }}</h6>
                                        
                                     </div>
-                                    <div class="col"><button class="btn btn-primary" type="button">Remove</button></div>
+                                    <div class="col"><button disabled class="btn btn-primary"  type="button">Review</button></div>
                                 </div>
                                 
                             </div>
@@ -148,154 +146,142 @@
             </div>
         </div>
     </section>
-    {% comment %} <script>
-        const jobSelect = document.getElementById('jobSelect');
-        const filterButton = document.getElementById('applyFilterBtn');
-        const sortDropdownItems = document.querySelectorAll('.dropdown-menu a[data-sort]');
-        const applicantList = document.getElementById('applicantList');
-        let selectedSortOption = '';
-        let filters = {};
-
-        function applyFilters() {
-            
-            const currentApplicants = [...applicantList.querySelectorAll('.card-body')];
-            const filteredApplicants = currentApplicants.filter(applicant => {
-                const experienceInput = document.getElementById('experienceInput').value;
-                const openingsInput = document.getElementById('openingsInput').value;
-                const criteriaInput = document.getElementById('criteriaInput').value.toLowerCase();
-                const skillsInput = document.getElementById('skillsInput').value.toLowerCase();
-    
-                const jobExperience = parseInt(applicant.getAttribute('exp'));
-                const jobOpenings = parseInt(applicant.getAttribute('openings'));
-                const jobCriteria = applicant.getAttribute('criteria').toLowerCase();
-                const jobSkills = applicant.getAttribute('skills').toLowerCase();
-    
-                const experiencePass = (!filters.experience || jobExperience > parseInt(experienceInput));
-                const openingsPass = (!filters.openings || jobOpenings === parseInt(openingsInput));
-                const criteriaPass = (!filters.criteria || jobCriteria.includes(criteriaInput));
-                const skillsPass = (!filters.skills || jobSkills.includes(skillsInput));
-    
-                return experiencePass && openingsPass && criteriaPass && skillsPass;
-        }
-
-        filterButton.addEventListener('click', () => {
-            filters = {
-                experience: document.getElementById('experienceInput').value,
-                openings: document.getElementById('openingsInput').value,
-                criteria: document.getElementById('criteriaInput').value.toLowerCase(),
-                skills: document.getElementById('skillsInput').value.toLowerCase(),
-            };
-            applyFilters();
-        });
-
-        // Add event listeners for sorting and filtering ...
-
-        const applicantsByJob = {
-            {% for job in jobs %}
-                '{{ job.id }}': [
-                    {% for applicant in job.applicants.all %}
-                        {
-                            name: '{{ applicant.name }}',
-                            // Add other applicant attributes here
-                        },
-                    {% endfor %}
-                ],
-            {% endfor %}
-        };
-
-        jobSelect.addEventListener('change', () => {
-            const selectedJobId = jobSelect.value;
-
-            if (selectedJobId) {
-                const selectedApplicants = applicantsByJob[selectedJobId];
-
-                applicantList.innerHTML = '';
-
-                selectedApplicants.forEach(applicant => {
-                    const applicantCardHTML = `
-                        <div class="card-body">
-                            <!-- ... (applicant card HTML as provided in previous responses) ... -->
-                        </div>
-                    `;
-                    applicantList.insertAdjacentHTML('beforeend', applicantCardHTML);
-                });
-            }
-        });
-    </script> {% endcomment %}
+       
     <script>
+        
         const jobSelect = document.getElementById('jobSelect');
-        const filterButton = document.getElementById('applyFilterBtn');
-        const sortDropdownItems = document.querySelectorAll('.dropdown-menu a[data-sort]');
+        const dropdownItems = document.querySelectorAll('#dropsort .dropdown-item');    
         const applicantList = document.getElementById('applicantList');
+        const filterButton = document.getElementById("filterDropdown");
+        const sortButton = document.getElementById("sortDropdown");
         let selectedSortOption = '';
+        //var djangoValue = document.getElementById("valueFromDjango").textContent;
         let filters = {};
-    
-        function applyFilters() {
-            const currentApplicants = [...applicantList.querySelectorAll('.card-body')];
-            const filteredApplicants = currentApplicants.filter(applicant => {
-                const experienceInput = document.getElementById('experienceInput').value;
-                const openingsInput = document.getElementById('openingsInput').value;
-                const criteriaInput = document.getElementById('criteriaInput').value.toLowerCase();
-                const skillsInput = document.getElementById('skillsInput').value.toLowerCase();
-    
-                const jobExperience = parseInt(applicant.getAttribute('data-experience'));
-                const jobOpenings = parseInt(applicant.getAttribute('data-openings'));
-                const jobCriteria = applicant.getAttribute('data-criteria').toLowerCase();
-                const jobSkills = applicant.getAttribute('data-skills').toLowerCase();
-    
-                const experiencePass = (!filters.experience || jobExperience > parseInt(experienceInput));
-                const openingsPass = (!filters.openings || jobOpenings === parseInt(openingsInput));
-                const criteriaPass = (!filters.criteria || jobCriteria.includes(criteriaInput));
-                const skillsPass = (!filters.skills || jobSkills.includes(skillsInput));
-    
-                return experiencePass && openingsPass && criteriaPass && skillsPass;
-            });
-    
-            applicantList.innerHTML = '';
-            filteredApplicants.forEach(applicant => {
-                applicantList.appendChild(applicant);
-            });
-        }
-    
-        filterButton.addEventListener('click', () => {
-            filters = {
-                experience: document.getElementById('experienceInput').value,
-                openings: document.getElementById('openingsInput').value,
-                criteria: document.getElementById('criteriaInput').value.toLowerCase(),
-                skills: document.getElementById('skillsInput').value.toLowerCase(),
-            };
-            applyFilters();
-        });
-    
-        sortDropdownItems.forEach(item => {
-            item.addEventListener('click', () => {
-                selectedSortOption = item.getAttribute('data-sort');
-                applyFilters();
-            });
-        });
-    
-        const applicantsByJob = {
+        let sortena = false;
+        
+        {% load custom_filters %}
+        const selectedJobId = jobSelect.value;
+        // Get a reference to the button element
+        const filterbutton = document.getElementById("applyFilterBtn");
+        let applicantsByJob = {
             {% for job in jobs %}
                 '{{ job.id }}': [
                     {% for applicant in job.applicants.all %}
                         {
+                            id: '{{ applicant.id }}',
                             name: '{{ applicant.name }}',
+                            match: '{{ applicant.match }}',
+                            per: '{{ applicant.per }}',
+                            ranking: '{{ applicant.match }}',
+                            experiance: '{{ applicant.exp }}',
+                            skills: '{{ applicant.skillstxt }}',
+                            sklno:'{{applicant.skills}}',
+                            resumetxt:' {{ applicant.resumetxt|truncate_and_replace:60000 }}',  <!-- Use the custom filter here -->
                             // Add other applicant attributes here
                         },
                     {% endfor %}
                 ],
             {% endfor %}
         };
-    
+        
+        const originalApplicantsByJob = JSON.parse(JSON.stringify(applicantsByJob));
+
+        // Add a click event listener
+       
+        filterbutton.addEventListener("click", function() {
+            // This code will be executed when the button is clicked
+           
+            applicantsByJob = JSON.parse(JSON.stringify(originalApplicantsByJob));
+            const experienceThreshold = experienceInput.value;
+            const criteriaKeywords = criteriaInput.value.toLowerCase().split(',').map(keyword => keyword.trim());
+            const skillsKeywords = skillsInput.value.toLowerCase().split(',').map(keyword => keyword.trim());
+            const selectedJobId = jobSelect.value;
+            
+            for (var prop in applicantsByJob) {
+                // Check if the property value is an array
+                if (Array.isArray(applicantsByJob[prop])) {
+                    
+                    // Filter out items based on conditions
+                    applicantsByJob[prop] = applicantsByJob[prop].filter(item =>item.experiance >= experienceThreshold && criteriaKeywords.some(keyword => item.resumetxt.includes(keyword)) && skillsKeywords.some(keyword => item.skills.includes(keyword)));
+                    
+                }
+            }
+            jobSelect.dispatchEvent(new Event('change'));
+            // You can add more code here to perform other actions
+        });
+        
+        // Sort applicants by ranking for each job
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function() {
+                sortena = true;
+                const selectedOption = item.innerText;
+                selectedSortOption = selectedOption;
+                if (selectedOption === 'marks') {
+                    for (const jobId in applicantsByJob) {
+                        if (applicantsByJob.hasOwnProperty(jobId)) {
+                            applicantsByJob[jobId].sort((a, b) => a.per - b.per);
+                        }
+                    }
+                    jobSelect.dispatchEvent(new Event('change'));
+                } else if (selectedOption === 'experience') {
+                    for (const jobId in applicantsByJob) {
+                        if (applicantsByJob.hasOwnProperty(jobId)) {
+                            applicantsByJob[jobId].sort((a, b) => a.experiance - b.experiance);
+                        }
+                    }
+                    jobSelect.dispatchEvent(new Event('change'));
+                } else if (selectedOption === 'skills') {
+                    for (const jobId in applicantsByJob) {
+                        if (applicantsByJob.hasOwnProperty(jobId)) {
+                            applicantsByJob[jobId].sort((a, b) => a.sklno.localeCompare(b.sklno));
+                        }
+                    }
+                    
+                    jobSelect.dispatchEvent(new Event('change'));
+                }  else if (selectedOption === 'name') {
+                    for (const jobId in applicantsByJob) {
+                        if (applicantsByJob.hasOwnProperty(jobId)) {
+                            applicantsByJob[jobId].sort((a, b) => a.name.localeCompare(b.name));
+                        }
+                    }
+                    
+                    jobSelect.dispatchEvent(new Event('change'));
+                } else if (selectedOption === 'ranking') {
+                    for (const jobId in applicantsByJob) {
+                        if (applicantsByJob.hasOwnProperty(jobId)) {
+                            applicantsByJob[jobId].sort((a, b) => a.ranking - b.ranking);
+                        }
+                    }
+                    jobSelect.dispatchEvent(new Event('change'));
+                }
+                
+                // Update the sorting flag
+               
+            });
+        });
+        
+        document.querySelector('#sortDropdown').addEventListener('click', function() {
+            const selectedOption = document.querySelector('#dropsort .dropdown-item.active');
+            if (selectedOption) {
+                sortena=true;
+            } 
+        });
+        if(sortena==false){
+            for (const jobId in applicantsByJob) {
+                if (applicantsByJob.hasOwnProperty(jobId)) {
+                    applicantsByJob[jobId].sort((a, b) => a.ranking - b.ranking);
+                }
+            }
+        }
+        
         jobSelect.addEventListener('change', () => {
             const selectedJobId = jobSelect.value;
     
             if (selectedJobId) {
                 const selectedApplicants = applicantsByJob[selectedJobId];
-    
                 applicantList.innerHTML = '';
-    
                 selectedApplicants.forEach(applicant => {
+                    var selectcd = jobSelect.value;
                     const applicantCardHTML = `
                         <div class="card-body">
                             <div class="row">
@@ -309,17 +295,19 @@
                                     <div class="row">
                                         <div class="col">
                                             <h6>CV Ranking</h6>
+                                            
                                             <div class="progress">
-                                                <div class="progress-bar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
+                                                <div class="progress-bar" aria-valuenow=${applicant.match} style="width: ${applicant.match}%;" aria-valuemin="0" aria-valuemax="100" >${applicant.match}%</div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top: 17px;">
                                         <div class="col">
-                                            <h6>Ranking :</h6>
+                                            
+                                        <h6>Skills :${applicant.skills }</h6>
                                             <!-- Add ranking info here -->
                                         </div>
-                                        <div class="col"><button class="btn btn-primary" type="button">Remove</button></div>
+                                        <div class="col"><button class="btn btn-primary" onclick="shortlistApplicant(${selectedJobId}, ${applicant.id})" type="button">Interview</button></div>
                                     </div>
                                 </div>
                             </div>
@@ -327,12 +315,74 @@
                     `;
                     applicantList.insertAdjacentHTML('beforeend', applicantCardHTML);
                 });
+                filterButton.removeAttribute("disabled");
+                sortButton.removeAttribute("disabled");
             }
+
+        });
+        function shortlistApplicant(jobId, applicantId) {
+            // You can now use the jobId and applicantId parameters
+            // to perform actions or make API calls as needed
+            const shortlistUrl = `/recruiter/interView_candidate/${jobId}/${applicantId}/`;
+           
+            fetch(shortlistUrl, {
+                method: 'GET', 
+            })
+            
+            .catch(error => {
+                // Handle network or other errors
+                console.error('An error occurred:', error);
+            });
+            for (var prop in applicantsByJob) {
+                // Check if the property value is an array
+                if (Array.isArray(applicantsByJob[prop])) {
+                    
+                    // Filter out items based on conditions
+                    applicantsByJob[prop] = {
+                        {% for job in jobs %}
+                            '{{ job.id }}': [
+                                {% for applicant in job.applicants.all %}
+                                    {
+                                        id: '{{ applicant.id }}',
+                                        name: '{{ applicant.name }}',
+                                        match: '{{ applicant.match }}',
+                                        per: '{{ applicant.per }}',
+                                        ranking: '{{ applicant.match }}',
+                                        experiance: '{{ applicant.exp }}',
+                                        skills: '{{ applicant.skillstxt }}',
+                                        sklno:'{{applicant.skills}}',
+                                        resumetxt:' {{ applicant.resumetxt|truncate_and_replace:60000 }}',  <!-- Use the custom filter here -->
+                                        // Add other applicant attributes here
+                                    },
+                                {% endfor %}
+                            ],
+                        {% endfor %}
+                    };
+                    
+                }
+            }
+            
+            jobSelect.dispatchEvent(new Event('change'));
+        }
+        
+        
+        
+       
+        
+        
+        
+        
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set the first job as selected by default
+            jobSelect.options[1].selected = true; // Use options[0] if you want the placeholder option
+            
+            // Trigger the change event to populate the applicant list
+            jobSelect.dispatchEvent(new Event('change'));
         });
     </script>
     
-    
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{%static 'assets/bootstrap/js/bootstrap.min.js'%}"></script>
     <script src="{%static 'assets/js/chart.min.js'%}"></script>
     <script src="{%static 'assets/js/bs-init.js'%}"></script>

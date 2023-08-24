@@ -75,8 +75,11 @@
                             <div class="steps-progressbar">
                                 <ul>
                                     <li class="previous">Applied</li>
-                                    {% comment %} <li class="active">Shortlisted</li>
-                                    <li>Interview</li> {% endcomment %}
+                                    
+                                    {% if job.status >= 2 %}<li class="active">CV Selected</li> {% else %}<li>CV Selected</li>{% endif %}
+                                    {% if job.status >= 3 %}<li class="active"><a class="btn btn-primary shadow" href="{% url 'interviewapp' %}">Interview</a></li>{% else %}<li>Interview</li>
+                                    {% endif %}
+                                    {% if job.status >= 4 %}<li class="active">Shortlisted</li>{% else %}<li>Shortlisted</li>{% endif %}
                                     <li>Selected</li>
                                 </ul>
                             </div>

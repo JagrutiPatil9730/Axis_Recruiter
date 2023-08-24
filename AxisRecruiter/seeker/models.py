@@ -8,7 +8,7 @@ class UserProfile(models.Model):
     passw = models.CharField(max_length=100,default='')
     email = models.CharField(max_length=100,default='')
     dob = models.DateField(default='2000-01-01')
-    exp = models.CharField(max_length=100,default='')
+    exp = models.CharField(max_length=100,default=0)
     POST = (
         ('Intern', 'Intern'),
         ('Cleark', 'Cleark'),
@@ -25,8 +25,8 @@ class UserProfile(models.Model):
     applied = models.PositiveIntegerField(default=0)
     ad1 = models.CharField(max_length=100,default='')
     ad2 = models.CharField(max_length=100,default='')
-    pho1 = models.CharField(max_length=100,default='')
-    pho2 = models.CharField(max_length=100,default='')
+    pho1 = models.CharField(max_length=100,default=0)
+    pho2 = models.CharField(max_length=100,default=0)
     WORK = (
         ('Open to Work', 'Open to Work'),
         ('Viewer', 'Viewer'),
@@ -37,12 +37,34 @@ class UserProfile(models.Model):
     per = models.CharField(max_length=100,default='')
     uni = models.CharField(max_length=100,default='')
     about = models.CharField(max_length=1000,default='')
-    applied_jobs = models.ManyToManyField(Jobs, blank=True,default=None)
+    interviewres = models.CharField(max_length=1000,default='')
+    applied_jobs = models.ManyToManyField('recruiter.Jobs', related_name='job_applicants', blank=True)
+
+    ranking=models.IntegerField(default=0)
+    skillstxt=models.CharField(max_length=10485750,default='')
+    skills=models.IntegerField(default=0)
+    match=models.IntegerField(default=0)
+    status=models.IntegerField(default=0)
+    interviewscore=models.IntegerField(default=0)
+    match=models.IntegerField(default=0)
+    hrreview=models.CharField(max_length=104750,default='')
     resumetxt=models.CharField(max_length=10485750,default='')
     resume = models.BinaryField(null=True, blank=True)
+    applied_interview = models.ManyToManyField('InterviewQ', related_name='applied_interview', blank=True)
 
 
 
     def __str__(self):
         return self.username
 
+
+class InterviewQ(models.Model):
+    Question =models.CharField(max_length=10485750,default='')    
+    Answer=models.CharField(max_length=10485750,default='')
+    Evalution = models.CharField(max_length=100,default='')
+    forjobs = models.CharField(max_length=100,default='')
+
+
+
+    def __str__(self):
+        return self.username
